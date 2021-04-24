@@ -1,30 +1,29 @@
-const express = require('express');
-const { dbConnection } = require('./database/config');
 require('dotenv').config();
+
+const express = require('express');
 const cors = require('cors');
 
-//crear el servidor de exprees
+const { dbConnection } = require('./database/config');
+
+// Crear el servidor de express
 const app = express();
 
-//BAse de datos
-dbConnection();
-
-//rutas
-
-//configurar cors
+// Configurar CORS
 app.use(cors());
 
-//req lo que se solicita, info de los headers
-// es lo que neustro servidor responde al cliente
-//Estos dos son los parametros del callback
-app.get('/', (req, resp) => {
+// Lectura y parseo del body
+app.use(express.json());
 
-    resp.json({
-        ok: true,
-        msg: 'Hola mundo'
-    });
-});
+// Base de datos
+dbConnection();
+
+
+// Rutas
+app.use('/api/usuarios', require('./routes/usuarios'));
+app.use('/api/login', require('./routes/auth'));
+
+
 
 app.listen(process.env.PORT, () => {
     console.log('Servidor corriendo en puerto ' + process.env.PORT);
-})
+});
