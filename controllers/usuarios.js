@@ -7,14 +7,26 @@ const { generarJWT } = require('../helpers/jwt');
 
 
 
-
 const getUsuarios = async(req, res) => {
-    const usuarios = await Usuario.find({}, 'nombre, email, role ,google');
+
+    const desde = Number(req.query.desde) || 0;
+
+    const [usuarios, total] = await Promise.all([
+        Usuario
+        .find({}, 'nombre email role google img')
+        .skip(desde)
+        .limit(5),
+
+        Usuario.countDocuments()
+    ]);
+
+
     res.json({
         ok: true,
         usuarios,
-        uid: req.uid
+        total
     });
+
 }
 
 
@@ -47,7 +59,6 @@ const crearUsuario = async(req, res = response) => {
         const token = await generarJWT(usuario.id);
 
 
-
         res.json({
             ok: true,
             usuario,
@@ -59,13 +70,14 @@ const crearUsuario = async(req, res = response) => {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'Error inesperadop'
+            msg: 'Error inesperado... revisar logs'
         });
-
     }
 
 
 }
+
+
 
 
 
