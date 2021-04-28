@@ -1,4 +1,4 @@
-const { response } = require('express');
+const { response, json } = require('express');
 
 const Medico = require('../models/medico');
 
@@ -49,23 +49,86 @@ const crearMedico = async(req, res = response) => {
 }
 
 
-const actualizarMedico = (req, res = response) => {
+const actualizarMedico = async(req, res = response) => {
+    const uid = req.uid;
+    const id = req.params.id;
+    try {
+
+        const medico = Medico.findById(id);
+
+        if (!medico) {
+            res.status(404).json({
+                ok: false,
+                msg: 'No es valio el id del medico'
+            });
+        }
+
+        const cambioMedico = {
+            usuario: uid,
+            ...req.body
+
+        }
+
+        const medicoActualizado = await Medico.findByIdAndUpdate(id, cambioMedico, { new: true });
+
+        res.json({
+            ok: true,
+            medico: medicoActualizado
+        });
+    } catch (error) {
+
+        console.log('Fallo en el update');
+        console.log(error);
 
 
-    res.json({
-        ok: true,
-        msg: 'actualizarMedico'
-    });
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el admin'
+        });
+
+    }
+
+
+
 
 }
 
-const borrarMedico = (req, res = response) => {
+const borrarMedico = async(req, res = response) => {
+
+    const id = req.params.id;
+
+    try {
+        const medico = await Medico.findById(id);
+
+        if (!medico) {
+            res.status(404).json({
+                ok: false,
+                msg: 'No se encontro id  medico'
+            });
+        }
+        await Medico.findByIdAndDelete(id);
+
+        res.json({
+            ok: true,
+            msg: 'borrarMedico'
+        });
+
+    } catch (error) {
+
+        console.log('Fallo en el Delete');
+        console.log(error);
 
 
-    res.json({
-        ok: true,
-        msg: 'borrarMedico'
-    });
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el admin'
+        });
+
+
+    }
+
+
+
 
 }
 

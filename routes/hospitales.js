@@ -26,11 +26,16 @@ router.post('/',
     crearHospital
 );
 
-router.put('/:id', [],
+router.put('/:id', [
+        validarJWT,
+        check('nombre', 'Ingresa un nombre po'),
+        validarCampos
+    ],
     actualizarHospital
 );
 
 router.delete('/:id',
+    validarJWT,
     borrarHospital
 );
 
