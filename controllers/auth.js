@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 
 const { generarJWT } = require('../helpers/jwt');
 const { googleVerify } = require('../helpers/google-verify');
+const { getMenuFrontEnd } = require('../helpers/menu-frontend');
 
 
 const login = async(req, res = response) => {
@@ -35,8 +36,8 @@ const login = async(req, res = response) => {
 
         res.json({
             ok: true,
-            msg: 'Hola mundo',
-            token
+            token,
+            menu: getMenuFrontEnd(usuarioDB.role)
         });
 
     } catch (error) {
@@ -67,7 +68,8 @@ const googleSignIn = async(req, res = response) => {
                 email,
                 password: '@@@',
                 img: picture,
-                google: true
+                google: true,
+
             });
         } else {
             ///Existe usuario
@@ -83,10 +85,11 @@ const googleSignIn = async(req, res = response) => {
         res.json({
             ok: true,
             msg: 'google sign in',
-            token
+            token,
+            menu: getMenuFrontEnd(usuario.role),
         });
     } catch (error) {
-        res.status(400).json({
+        res.status(401).json({
             ok: false,
             msg: 'token fallo',
 
@@ -98,11 +101,14 @@ const googleSignIn = async(req, res = response) => {
 const renewToken = async(req, res = response) => {
 
     const uid = req.uid;
+    const usuario = await Usuario.findById(uid);
     const token = await generarJWT(uid);
 
     res.json({
         ok: true,
-        token
+        token,
+        usuario,
+        menu: getMenuFrontEnd(usuario.role)
     });
 }
 

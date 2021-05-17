@@ -7,7 +7,6 @@ const { actualizarImagen } = require('../helpers/actualizar-imagen');
 
 
 const fileUpload = (req, res = response) => {
-
     const tipo = req.params.tipo;
     const id = req.params.id;
 
@@ -28,6 +27,7 @@ const fileUpload = (req, res = response) => {
         });
     }
 
+
     // Procesar la imagen...
     const file = req.files.imagen;
 
@@ -42,12 +42,12 @@ const fileUpload = (req, res = response) => {
             msg: 'No es una extensión permitida'
         });
     }
-
     // Generar el nombre del archivo
     const nombreArchivo = `${ uuidv4() }.${ extensionArchivo }`;
 
     // Path para guardar la imagen
     const path = `./uploads/${ tipo }/${ nombreArchivo }`;
+
 
     // Mover la imagen
     file.mv(path, (err) => {
@@ -68,9 +68,7 @@ const fileUpload = (req, res = response) => {
             nombreArchivo
         });
     });
-
 }
-
 
 const retornaImagen = (req, res = response) => {
 

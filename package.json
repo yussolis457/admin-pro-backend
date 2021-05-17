@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start:dev": "nodemon index.js"
+        "start:dev": "nodemon index.js",
+        "start": "node index.js"
     },
     "keywords": [],
     "author": "",
@@ -19,6 +20,7 @@
         "google-auth-library": "^7.0.4",
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^5.12.5",
+        "sweetalert2": "^10.16.6",
         "uuid": "^8.3.2"
     }
 }

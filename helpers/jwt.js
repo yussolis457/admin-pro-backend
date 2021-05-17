@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 
+
 const generarJWT = (uid) => {
     console.log('FLaG');
     return new Promise((resolve, reject) => {
